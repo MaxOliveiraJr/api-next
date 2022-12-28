@@ -1,12 +1,23 @@
 import { NextApiHandler } from "next";
+import { Users } from "../../../utils/users";
 
-const handler: NextApiHandler = async (req, res) => {
-  res.json([
-    { name: "Max", age: 90 },
-    { name: "Max 1", age: 12 },
-    { name: "Max 2", age: 8 },
-  ]);
+const handlerGet: NextApiHandler = async (req, res) => {
+  return res.json(Users);
 };
 
+const handlerPost: NextApiHandler = async (req, res) => {
+  return res.json({ status: true });
+};
+
+const handler: NextApiHandler = async (req, res) => {
+  switch (req.method) {
+    case "GET":
+      handlerGet(req, res);
+      break;
+    case "POST":
+      handlerPost(req, res);
+      break; 
+  }
+};
 
 export default handler;
