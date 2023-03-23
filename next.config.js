@@ -8,7 +8,15 @@ const nextConfig = {
 
         headers: [
           { key: 'Access-Control-Allow-Origin', value: '*' },
-          { key: 'Access-Control-Allow-Methods', value: '*' }
+          { key: 'Access-Control-Allow-Methods', value: 'GET,POST,PUT,DELETE' }
+        ]
+      },
+      {
+        source: '/api/users',
+
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,POST,PUT,DELETE' }
         ]
       },
 
