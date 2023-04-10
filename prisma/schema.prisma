@@ -17,6 +17,7 @@ model User {
   createdAt DateTime @default(now())
   active Boolean @default(true)
   role Role @default(USER)
+  photos Photo[]
 
   @@map("users")
 }
@@ -30,6 +31,9 @@ model Photo {
   id Int @id @default(autoincrement())
   url String 
   legend String?
+  userId Int
+
+  user User @relation(fields: [userId],references: [id])
 
   @@map("photos")
 }
