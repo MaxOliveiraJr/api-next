@@ -1,27 +1,39 @@
 import { NextApiHandler } from "next";
 import { Users } from "../../../utils/users";
+import prisma from "../../../libs/prisma";
 
 const handlerGet: NextApiHandler = async (req, res) => {
-  const { name, age }:any = req.query;
+  const users = await prisma.user.findMany();
 
-  if (name || age) {
-    Users.map((user) => {
-      if (user.name === name || user.age == parseInt(age)) {
-        return res.json({ status: true, user: user });
-      }
-    });
+  res.json({ status: true, users });
 
-    return res.status(404).json({ status: false, messege: "error" });
-  } else {
-    return res.status(200).json({ status: true, users: Users });
-  }
+  // const { name, age }: any = req.query;
+
+  // if (name || age) {
+  //   Users.map((user) => {
+  //     if (user.name === name || user.age == parseInt(age)) {
+  //       return res.json({ status: true, user: user });
+  //     }
+  //   });
+
+  //   return res.status(404).json({ status: false, messege: "error" });
+  // } else {
+  //   return res.status(200).json({ status: true, users: Users });
+  // }
 };
 
 const handlerPost: NextApiHandler = async (req, res) => {
-  const { name, age } = req.body;
+  const { name, email } = req.body;
 
-  if (name && age) {
-    return res.json({ status: true, user: { name } });
+  if (name && email) {
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+      },
+    });
+
+    return res.status(200).json({ status: false, user: newUser });
   } else {
     return res.json({ status: false, message: "error " });
   }
