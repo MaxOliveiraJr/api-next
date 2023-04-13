@@ -5,10 +5,24 @@ import prisma from "../../../libs/prisma";
 const handlerGet: NextApiHandler = async (req, res) => {
   const users = await prisma.user.findMany({
     where: {
-      active: true,
+      /*name:{
+        startsWith: 'Max',  
+        endsWith:'Jr',
+        equals: 'Max'
+        
+      },*/
+
+      OR: [
+        {
+          name: {
+            startsWith: 'Max',
+          }
+        },{
+          name: 'Rayane'
+        }
+      ]
     },
     select: {
-
       name: true,
       email: true,
       active: true,
