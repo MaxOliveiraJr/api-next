@@ -3,7 +3,19 @@ import { Users } from "../../../utils/users";
 import prisma from "../../../libs/prisma";
 
 const handlerGet: NextApiHandler = async (req, res) => {
+  const { page } = req.query;
+
+  let take = 2;
+
+  let skip = 0;
+
+  if (page) {
+    skip = (parseInt(page as string) - 1) * take;
+  }
+
   const users = await prisma.user.findMany({
+    skip: skip,
+    take: take,
     where: {
       /*name:{
         startsWith: 'Max',  
@@ -11,8 +23,7 @@ const handlerGet: NextApiHandler = async (req, res) => {
         equals: 'Max'
         
       },*/
-
-      OR: [
+      /* OR: [
         {
           name: {
             startsWith: 'Max',
@@ -20,12 +31,15 @@ const handlerGet: NextApiHandler = async (req, res) => {
         },{
           name: 'Rayane'
         }
-      ]
+      ] */
     },
     select: {
       name: true,
       email: true,
       active: true,
+    },
+    orderBy: {
+      name: "asc",
     },
   });
 
@@ -40,7 +54,7 @@ const handlerGet: NextApiHandler = async (req, res) => {
   //     }
   //   });
 
-  //   return res.status(404).json({ status: false, messege: "error" });
+  //   return res.status(404).json({ status: false, message: "error" });
   // } else {
   //   return res.status(200).json({ status: true, users: Users });
   // }
@@ -55,7 +69,16 @@ const handlerPost: NextApiHandler = async (req, res) => {
         name,
         email,
       },
-    });
+    }).catch(
+      (e)=>{
+        console.log(e);
+
+        if (e.meta.target === "users_email_key"){
+          res.status(402).json({ status: false, message: "e-mail já cadastrado" });
+        }
+          
+      }
+    );
 
     return res.status(200).json({ status: false, user: newUser });
   } else {
